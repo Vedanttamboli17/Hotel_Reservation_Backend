@@ -4,6 +4,9 @@
 /*.out
 /*.test
 
+/tmp/
+/*.log
+
 # Air hot reload config
 .air.toml
 
@@ -14,3 +17,7 @@
 # Ignore OS junk files
 .DS_Store
 Thumbs.db
+
+#env
+.env
+.env.*
