@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http/httptest"
 	"testing"
@@ -65,6 +64,8 @@ func TestPostUser(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	byteBody, _ := io.ReadAll(resp.Body)
-	fmt.Println(string(byteBody))
+	
+	var user types.User
+	json.NewDecoder(resp.Body).Decode(&user)
+	fmt.Println(user)
 }
