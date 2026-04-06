@@ -10,6 +10,7 @@ import (
 
 type HotelStore interface {
 	InsertHotel(context.Context, *types.Hotel) (*types.Hotel, error)
+	UpdateHotelByID(context.Context, *types.Hotel) (*types.Hotel, error)
 }
 
 type MongoHotelStore struct {
@@ -30,5 +31,14 @@ func (s *MongoHotelStore) InsertHotel(ctx context.Context, hotel *types.Hotel) (
 		return nil, err
 	}
 	hotel.ID = res.InsertedID.(primitive.ObjectID)
+	return hotel, nil
+}
+
+func (s *MongoHotelStore) UpdateHotelByID(ctx context.Context, hotel *types.Hotel) (*types.Hotel, error) {
+	id := hotel.ID.Hex()
+	_, err := s.coll.UpdateByID(ctx, id, hotel)
+	if err != nil {
+		return nil, err
+	}
 	return hotel, nil
 }

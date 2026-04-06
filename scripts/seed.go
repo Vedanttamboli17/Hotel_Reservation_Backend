@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/goprojects/hotel-reservation/db"
-	"github.com/goprojects/hotel-reservation/types"
 	"context"
 	"log"
+
+	"github.com/goprojects/hotel-reservation/db"
+	"github.com/goprojects/hotel-reservation/types"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -21,21 +22,46 @@ func main() {
 	}
 
 	hotelStore := db.NewMongoHotelStore(client, db.DBNAME)
+	roomStore := db.NewMongoRoomStore(client, db.DBNAME)
 
 	hotel := types.Hotel{
-		Name: "Sai Recidency",
+		Name:     "Kamare Valley",
 		Location: "Palghar",
 	}
 
-	room := types.Room{
-		Type: types.SingleRoomType,
-		BasePrice: 1999,
+	rooms := []types.Room{
+		{
+			Type:      types.SingleRoomType,
+			BasePrice: 999,
+		},
+		{
+			Type:      types.DoubleRoomType,
+			BasePrice: 1499,
+		},
+		{
+			Type:      types.SeasideRoomType,
+			BasePrice: 1999,
+		},
 	}
-	_ = room
+
 	insertedHotel, err := hotelStore.InsertHotel(ctx, &hotel)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
+	for i := range rooms {
+		rooms[i].HotelID = insertedHotel.ID
+		insertedRoom, err := roomStore.InsertRoom(ctx, &rooms[i])
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			_, err := hotelStore.UpdateHotelByID(ctx, &hotel)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		fmt.Println(insertedRoom)
+	}
+
 	fmt.Println(insertedHotel)
 }
