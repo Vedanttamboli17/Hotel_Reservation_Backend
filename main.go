@@ -14,8 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const dburi = "mongodb://localhost:27017/"
-
 var config = fiber.Config{
 	ErrorHandler: func(c *fiber.Ctx, err error) error {
 		return c.JSON(map[string]string{"error": err.Error()})
@@ -44,7 +42,7 @@ func main() {
 		fmt.Println(bachua)*/
 
 	client, err := mongo.Connect(context.TODO(), options.Client().
-		ApplyURI(dburi))
+		ApplyURI(db.DBURI))
 	if err != nil {
 		log.Fatal(err)
 	}
