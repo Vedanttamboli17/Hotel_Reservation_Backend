@@ -4,6 +4,7 @@ go 1.25.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.9
+	github.com/syndtr/goleveldb v1.0.0
 	go.mongodb.org/mongo-driver v1.17.4
 	golang.org/x/crypto v0.41.0
 )

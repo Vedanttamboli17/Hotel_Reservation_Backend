@@ -8,6 +8,7 @@ import (
 
 	"github.com/goprojects/hotel-reservation/db"
 	"github.com/goprojects/hotel-reservation/types"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -21,8 +22,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	hotelStore := db.NewMongoHotelStore(client, db.DBNAME)
-	roomStore := db.NewMongoRoomStore(client, db.DBNAME)
+	hotelStore := db.NewMongoHotelStore(client)
+	roomStore := db.NewMongoRoomStore(client, hotelStore)
 
 	hotel := types.Hotel{
 		Name:     "Kamare Valley",
@@ -55,7 +56,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		} else {
-			_, err := hotelStore.UpdateHotelByID(ctx, &hotel)
+			err := hotelStore.Update(ctx, bson.M{}, bson.M{})
 			if err != nil {
 				log.Fatal(err)
 			}
